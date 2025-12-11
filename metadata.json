@@ -1,0 +1,8 @@
+{
+  "name": "HealthLens AI",
+  "description": "A production-ready medical report analyzer using Gemini 3 Pro Vision to interpret complex medical documents into patient-friendly summaries.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone"
+  ]
+}
