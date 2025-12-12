@@ -50,7 +50,7 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({ label }) => {
   };
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative z-[100]" ref={menuRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`
@@ -67,10 +67,11 @@ export const ShareMenu: React.FC<ShareMenuProps> = ({ label }) => {
       {/* Pop-up Menu */}
       <div 
         className={`
-          absolute top-full right-0 mt-3 w-56 rounded-xl overflow-hidden shadow-2xl z-50 border transition-all duration-200 origin-top-right transform
+          absolute top-full right-0 mt-3 w-56 rounded-xl overflow-hidden shadow-2xl border transition-all duration-200 origin-top-right transform
           ${isOpen ? 'opacity-100 scale-100 translate-y-0 visible' : 'opacity-0 scale-95 -translate-y-2 invisible pointer-events-none'}
           bg-white/95 dark:bg-navy-800/95 border-slate-100 dark:border-navy-600 backdrop-blur-xl
         `}
+        style={{ zIndex: 9999 }} // Explicitly high z-index
       >
         <div className="p-1">
           <button

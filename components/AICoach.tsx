@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Send, User, Sparkles, Mic, Volume2, Phone } from 'lucide-react';
 import { ChatMessage, Language } from '../types';
 import { TRANSLATIONS } from '../translations';
@@ -24,7 +24,11 @@ export const AICoach: React.FC<AICoachProps> = ({ language, context }) => {
   const [isVoiceActive, setIsVoiceActive] = useState(false); // Voice session state
   const scrollRef = useRef<HTMLDivElement>(null);
   const t = TRANSLATIONS[language];
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
+  // Initialize AI client only once
+  const ai = useMemo(() => {
+    return new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {

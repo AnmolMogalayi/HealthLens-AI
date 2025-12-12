@@ -4,8 +4,6 @@ import { Language, Theme } from '../types';
 import { TRANSLATIONS } from '../translations';
 
 interface HeaderProps {
-  isDemoMode: boolean;
-  onToggleDemo: () => void;
   language: Language;
   onLanguageChange: (lang: Language) => void;
   theme: Theme;
@@ -24,7 +22,7 @@ const LANGUAGES: { code: Language; label: string; flag: string }[] = [
   { code: 'ar', label: 'العربية', flag: '🇸🇦' },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ isDemoMode, onToggleDemo, language, onLanguageChange, theme, onToggleTheme }) => {
+export const Header: React.FC<HeaderProps> = ({ language, onLanguageChange, theme, onToggleTheme }) => {
   const t = TRANSLATIONS[language];
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langDropdownRef = useRef<HTMLDivElement>(null);
@@ -53,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ isDemoMode, onToggleDemo, langua
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-600 dark:from-neon-blue dark:to-cyan-200 tracking-tight">
               {t.appTitle}
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block tracking-wide">{t.appSubtitle}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium hidden sm:block tracking-wide">{t.appSubtitle}</p>
           </div>
         </div>
 
@@ -126,29 +124,6 @@ export const Header: React.FC<HeaderProps> = ({ isDemoMode, onToggleDemo, langua
                 ))}
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-1 bg-slate-200/50 dark:bg-navy-700/50 p-1.5 rounded-full hidden sm:flex backdrop-blur-sm border border-white/50 dark:border-navy-600">
-            <button
-              onClick={onToggleDemo}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                isDemoMode 
-                  ? 'bg-white dark:bg-navy-600 text-blue-600 dark:text-neon-blue shadow-md scale-105' 
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/40 dark:hover:bg-navy-600/40'
-              }`}
-            >
-              {t.demo}
-            </button>
-            <button
-              onClick={onToggleDemo}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                !isDemoMode 
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-neon-blue dark:to-neon-purple text-white shadow-md scale-105' 
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/40 dark:hover:bg-navy-600/40'
-              }`}
-            >
-              {t.live}
-            </button>
           </div>
           
           <button className="text-slate-400 hover:text-blue-600 dark:hover:text-neon-blue transition-colors duration-300 hover:scale-110 active:scale-95">

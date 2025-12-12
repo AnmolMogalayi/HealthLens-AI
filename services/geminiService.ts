@@ -1,8 +1,15 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { AnalysisResponse, TrendMetric, Language, TrendAnalysisResult, BiomarkerTrend, HealthForecastResult, CommunityComparisonResult, LifeEvent, TimelineAnalysis, MapsResult } from "../types";
 
-// Initialize the client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to lazily get the AI client
+const getAiClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.error("API_KEY is missing from process.env");
+    throw new Error("API Key not found");
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 const ANALYSIS_SCHEMA: Schema = {
   type: Type.OBJECT,
@@ -518,6 +525,7 @@ export const analyzeMedicalReport = async (
   const targetLang = LANG_MAP[language];
 
   try {
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: {
@@ -566,11 +574,26 @@ export const findNearbySpecialists = async (
   if (isDemoMode) {
     return new Promise((resolve) => setTimeout(() => resolve({
         text: `Based on your location, here are some highly-rated ${specialist}s nearby:\n\n1. **Heart & Vascular Institute** (0.8 miles) - 4.8 stars\n2. **City Cardiology Center** (1.2 miles) - 4.6 stars\n3. **Dr. Sarah Smith, MD** (1.5 miles) - 4.9 stars`,
-        groundingChunks: []
+        // Simulate structured grounding chunks for the demo
+        groundingChunks: [
+          {
+            web: { title: "Heart & Vascular Institute", uri: "#" },
+            maps: { title: "Heart & Vascular Institute", googleMapsUri: "https://maps.google.com", rating: 4.8, userRatingCount: 124, formattedAddress: "123 Medical Center Dr, San Francisco, CA" }
+          },
+          {
+            web: { title: "City Cardiology Center", uri: "#" },
+            maps: { title: "City Cardiology Center", googleMapsUri: "https://maps.google.com", rating: 4.6, userRatingCount: 89, formattedAddress: "456 Health Blvd, San Francisco, CA" }
+          },
+          {
+            web: { title: "Dr. Sarah Smith, MD", uri: "#" },
+            maps: { title: "Dr. Sarah Smith, MD", googleMapsUri: "https://maps.google.com", rating: 4.9, userRatingCount: 215, formattedAddress: "789 Wellness Way, San Francisco, CA" }
+          }
+        ]
     }), 2000));
   }
 
   try {
+    const ai = getAiClient();
     const targetLang = LANG_MAP[language];
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -615,6 +638,7 @@ export const analyzeTrends = async (
   const targetLang = LANG_MAP[language];
 
   try {
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: {
@@ -701,6 +725,7 @@ export const analyzeLongitudinalTrends = async (
       Return ONLY JSON matching the following schema.`
     });
 
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: { parts: contentParts },
@@ -748,6 +773,7 @@ export const generateHealthForecast = async (
       Return ONLY JSON matching the schema provided.
     `;
 
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: prompt,
@@ -798,6 +824,7 @@ export const generateCommunityInsights = async (
       Return ONLY JSON matching the schema provided.
     `;
 
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: prompt,
@@ -849,6 +876,7 @@ export const analyzeTimelineCorrelations = async (
       Return ONLY JSON matching the schema provided.
     `;
 
+    const ai = getAiClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: prompt,

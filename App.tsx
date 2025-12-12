@@ -236,8 +236,6 @@ const App: React.FC = () => {
       </div>
 
       <Header 
-        isDemoMode={isDemoMode} 
-        onToggleDemo={() => setIsDemoMode(!isDemoMode)} 
         language={language}
         onLanguageChange={setLanguage}
         theme={theme}
@@ -410,7 +408,8 @@ const App: React.FC = () => {
               </div>
             ) : status === AppStatus.SUCCESS && analysis ? (
               <div className="space-y-8 animate-stagger-enter">
-                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/30 dark:bg-navy-800/50 backdrop-blur-md p-4 rounded-3xl border border-white/40 dark:border-navy-600">
+                 {/* Results Header with explicit Z-index for menu */}
+                 <div className="relative z-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/30 dark:bg-navy-800/50 backdrop-blur-md p-4 rounded-3xl border border-white/40 dark:border-navy-600">
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight px-4">{t.resultsTitle}</h2>
                     <div className="flex gap-3 w-full sm:w-auto">
                        <ShareMenu label={t.shareBtn} />
@@ -419,8 +418,10 @@ const App: React.FC = () => {
                        </button>
                     </div>
                  </div>
+                 
                  <AudioPlayer text={readableText} language={language} />
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
                     <TrendAnalysisCard onUpload={handleTrendUpload} isAnalyzing={trendStatus === 'analyzing'} trends={trends} error={trendError} translations={{ title: t.trendTitle, uploadTitle: t.trendUploadTitle, uploadDesc: t.trendUploadDesc, uploadBtn: t.trendUploadBtn, analyzing: t.trendAnalyzing, analyzingDesc: t.trendAnalyzingDesc, metric: t.trendMetric, previous: t.trendPrevious, current: t.trendCurrent, trend: t.trendDirection, status: t.trendStatus, uploadNew: t.trendUploadNew, improved: t.trendImproved, worsened: t.trendWorsened, stable: t.trendStable }} />
                     <SummaryCard text={analysis.analysis.simpleSummary.text} title={t.simpleSummary} />
                     <KeyFindingsCard findings={analysis.analysis.keyFindings} title={t.keyFindings} statusLabels={{ normal: t.statusNormal, attention: t.statusAttention, urgent: t.statusUrgent }} />
